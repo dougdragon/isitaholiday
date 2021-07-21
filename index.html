@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>Is today a holiday?</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit.min.js"></script>
+  </head>
+  <body>
+    <center>
+      <h1 class="uk-heading-large"></h1>
+      <div id="output"></div>
+      <div id="spinner" uk-spinner="ratio: 4"></div>
+    </center>
+    <script>
+      const date = new Date();
+      const [month, day, year] = [date.getMonth() + 1, date.getDate(), date.getFullYear()];
+      const monthString = date.toLocaleString("default", { month: "long" });
+      let fullDateString = `${monthString} ${day} ${year}`;
+      let weekDay;
+
+      const getHoliday = () => {
+        const baseUrl = "https://holidays.abstractapi.com/v1/?country=US&year=:year&month=:month&day=:day&api_key=bd49ff23f4064f62971f9184bcdda1fe";
+        const url = baseUrl
+          .replace(":month", month)
+          .replace(":day", day)
+          .replace(":year", year);
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            hideSpinner();
+            if (data[0]?.week_day) {
+              fullDateString = `${data[0].week_day}, ${fullDateString}`;
+            }
+            document.querySelector("h1").innerText = `${fullDateString}`;
+            fillData(data);
+          })
+          .catch(e => {
+            console.log(`Error: ${e}`);
+            hideSpinner();
+            fillDataWithError(e);
+
+          });
+      }
+
+      const fillData = (jsonData) => {
+        let mainData = document.getElementById("output");
+        const div = document.createElement("div");
+        // const h1 = document.querySelector("h1").innerText = fullDateString;
+
+        if (jsonData.length === 0) {
+          div.innerHTML = `<h2 class="uk-heading-small">No holiday today!</p>`;
+          mainData.appendChild(div);
+        } else {
+          for (var i = 0; i < jsonData.length; i++) {
+            div.innerHTML = `<h2 class="uk-heading-small">Holiday: ${jsonData[i].name} (type: <i>${jsonData[i].type}</i>)</p>`;
+            mainData.appendChild(div);
+          }
+        }
+      }
+
+      const fillDataWithError = (error) => {
+        let mainData = document.getElementById("output");
+        const div = document.createElement("div");
+        div.innerHTML = `There was an error: ${error}`;
+      }
+
+      const hideSpinner = () => document.getElementById("spinner").style.display = "none";
+
+      window.onload = () => getHoliday();
+    </script>
+  </body>
+</html>
