@@ -11,6 +11,7 @@
       <div id="spinner" uk-spinner="ratio: 4"></div>
     </center>
     <script>
+      const apiKey = "REPLACE_WITH_YOUR_API_KEY";
       const date = new Date();
       const [month, day, year] = [date.getMonth() + 1, date.getDate(), date.getFullYear()];
       const monthString = date.toLocaleString("default", { month: "long" });
@@ -18,7 +19,7 @@
       let weekDay;
 
       const getHoliday = () => {
-        const baseUrl = "https://holidays.abstractapi.com/v1/?country=US&year=:year&month=:month&day=:day&api_key=bd49ff23f4064f62971f9184bcdda1fe";
+        const baseUrl = `https://holidays.abstractapi.com/v1/?country=US&year=:year&month=:month&day=:day&api_key=${apiKey}`;
         const url = baseUrl
           .replace(":month", month)
           .replace(":day", day)
