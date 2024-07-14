@@ -53,7 +53,7 @@
           mainData.appendChild(div);
         } else {
           for (var i = 0; i < jsonData.length; i++) {
-            div.innerHTML = `<h2 class="uk-heading-small">Holiday: ${jsonData[i].name} (type: <i>${jsonData[i].type}</i>)</p>`;
+            div.innerHTML = `<h2 class="uk-heading-small">Holiday: ${jsonData[i].name}<br />Type: <i>${jsonData[i].type}</i><br />Location: ${jsonData[i].location}</p>`;
             mainData.appendChild(div);
           }
         }
